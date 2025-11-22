@@ -1,6 +1,8 @@
 <?php
 
 return [
+    Brian2694\Toastr\ToastrServiceProvider::class,
+    'Toastr' => Brian2694\Toastr\Facades\Toastr::class,
 
     /*
     |--------------------------------------------------------------------------
