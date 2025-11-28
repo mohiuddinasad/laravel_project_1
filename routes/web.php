@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\BAckend\Category\CategoryController;
 use App\Http\Controllers\Backend\MyProfile\MyProfileController;
 use App\Http\Controllers\Backend\RolePermission\RolePermissionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,8 +28,10 @@ Route::prefix('dashboard/')->name('dashboard.')->middleware(['auth', 'verified']
     Route::post('my-profile-image', [MyProfileController::class, 'profile_image'])->name('my.profile.image');
     Route::post('my-profile-pass', [MyProfileController::class, 'profile_pass'])->name('my.profile.pass');
 
+
+
     // Role and permission routes
-    Route::prefix('role-permission/')->middleware('can:delete')->name('rolePermission.')->group(function () {
+    Route::prefix('role-permission/')->middleware(['auth', 'verified'])->name('rolePermission.')->group(function () {
         Route::get('create-user', [RolePermissionController::class, 'createUser'])->name('create.user');
         Route::post('create-user', [RolePermissionController::class, 'userStore'])->name('user.store');
         Route::get('user-list', [RolePermissionController::class, 'userList'])->name('user.list');
@@ -41,6 +45,15 @@ Route::prefix('dashboard/')->name('dashboard.')->middleware(['auth', 'verified']
         Route::get('all-roles', [RolePermissionController::class, 'allRoles'])->name('all.roles');
         Route::get('permissions/{id}', [RolePermissionController::class,'permissions'])->name('permissions');
         Route::post('permissions', [RolePermissionController::class,'permissionsStore'])->name('permissions.store');
+    });
+
+
+    // category routes
+    Route::prefix('category/')->name('category.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::post('category-store', [CategoryController::class, 'categoryStore'])->name('category.store');
+        Route::get('category-view', [CategoryController::class, 'categoryView'])->name('category.view');
+
     });
 });
 

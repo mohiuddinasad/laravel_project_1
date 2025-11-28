@@ -21,6 +21,7 @@
 
     <meta name="description" content="" />
 
+    @stack('backend_css')
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
 
@@ -132,9 +133,15 @@
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
             <li class="menu-item {{ Route::is('dashboard') ? 'active open':''}}" >
-              <a href="index.html" class="menu-link">
+              <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
+              </a>
+            </li>
+            <li class="menu-item {{ Route::is('dashboard.category.index') ? 'active open':''}}" >
+              <a href="{{ route('dashboard.category.index') }}" class="menu-link">
+                <iconify-icon icon="material-symbols:category-rounded" width="22" height="22"></iconify-icon> &nbsp; &nbsp;
+                <div data-i18n="Analytics">Categories</div>
               </a>
             </li>
 
