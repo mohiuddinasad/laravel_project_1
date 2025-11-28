@@ -7,7 +7,7 @@
                 <a href="{{ route('dashboard.category.index') }}" class="btn btn-primary">Go Back</a>
             </div>
             <div class="card-body">
-                <table class="table table-striped table-bordered table-responsive">
+                <table class="table table-striped table-bordered table-responsive text-center">
                     <tr>
                         <th>#</th>
                         <th>Title</th>
@@ -21,17 +21,21 @@
                         <tr>
                             <td>{{ ++$key }}</td>
                             <td>{{ $cetagory->title }}</td>
-                            <td>{{ $cetagory->parent_id }}</td>
+                            <td><span class="badge bg-{{ $cetagory->parent ? 'success' : 'danger'}}">{{ $cetagory->parent ? $cetagory->parent->title : 'Not found'}}</span></td>
                             <td>{{ $cetagory->meta_title }}</td>
                             <td>{{ $cetagory->keywords }}</td>
-                            <td>{{ $cetagory->description }}</td>
+                            <td>{{ $cetagory->description }} </td>
                             <td>
-                                <a href="" class="btn btn-outline-primary">Edit</a>
+                                <a href="{{ route('dashboard.category.category.edit', $cetagory->slug) }}" class="btn btn-outline-primary">Edit</a>
                                 <a href="" class="btn btn-outline-danger">Delete</a>
                             </td>
                         </tr>
                     @empty
-                        
+                        <tr>
+                            <td  colspan="7">
+                                <div class="alert alert-danger">No Category found</div>
+                            </td>
+                        </tr>
                     @endforelse
                 </table>
             </div>

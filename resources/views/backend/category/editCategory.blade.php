@@ -32,7 +32,7 @@
         <div class="card mt-3 p-2">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <h3 class="m-0">
-                    Category
+                   Edit Category
                 </h3>
                 <a href="{{ route('dashboard.category.category.view') }}" class="btn btn-primary"
                     style="display:flex; align-items: center; justify-content: center; line-height: 0;"><span
@@ -41,31 +41,31 @@
             </div>
 
             <div class="card-body">
-                <form action="{{ route('dashboard.category.category.store') }}" method="post">
+                <form action="{{ route('dashboard.category.category.update', $category_edit->slug) }}" method="post">
+                    @method('put')
                     @csrf
                     <div class="row">
                         <div class="col-lg-6">
-                            <input type="text" name="title" placeholder="title" class="form-control p-3">
+                            <input value="{{ $category_edit->title }}" type="text" name="title" placeholder="title" class="form-control p-3">
                         </div>
                         <div class="col-lg-6">
                             <select class="js-example-basic-single" name="category_id">
                                 <option value="" selected disabled>---select category---</option>
-                                @foreach ($cetagories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->title }}</option>
-
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}" {{ $category->id == $category_edit->category_id ? 'selected' : '' }}>{{ $category->title }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-lg-6 mt-4">
-                            <input type="text" name="meta_title" placeholder="meta title" class="form-control p-3">
+                            <input value="{{ $category_edit->meta_title }}" type="text" name="meta_title" placeholder="meta title" class="form-control p-3">
                         </div>
                         <div class="col-lg-6 mt-4">
-                            <input type="text" name="keywords" placeholder="meta keywords" class="form-control p-3">
+                            <input value="{{ $category_edit->keywords }}" type="text" name="keywords" placeholder="meta keywords" class="form-control p-3">
                         </div>
 
                         <div class="col-lg-12 mt-4">
                             <textarea name="description" id="" class="form-control p-3"
-                                placeholder="meta descriptions..."></textarea>
+                                placeholder="meta descriptions...">{{ $category_edit->description }}</textarea>
                         </div>
 
                     </div>

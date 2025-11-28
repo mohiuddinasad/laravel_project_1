@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    /** @use HasFactory<\Database\Factories\Category\CategoryFactory> */
-    use HasFactory;
+    public function parent (){
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }

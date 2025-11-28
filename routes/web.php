@@ -53,6 +53,8 @@ Route::prefix('dashboard/')->name('dashboard.')->middleware(['auth', 'verified']
         Route::get('/', [CategoryController::class, 'index'])->name('index');
         Route::post('category-store', [CategoryController::class, 'categoryStore'])->name('category.store');
         Route::get('category-view', [CategoryController::class, 'categoryView'])->name('category.view');
+        Route::get('category-edit/{slug}', [CategoryController::class, 'categoryEdit'])->name('category.edit');
+        Route::put('category-update/{slug}', [CategoryController::class, 'categoryUpdate'])->name('category.update');
 
     });
 });
