@@ -45,7 +45,7 @@ class CategoryController extends Controller
     public function categoryUpdate(Request $request, $slug){
             $request->validate([
                 'title'=>'required',
-        ]);    
+        ]);
         $updateCategory = Category::where('slug', $slug)->first();
         $updateCategory->title = $request->title;
         $updateCategory->slug=Str::slug($request->title) . uniqid();
@@ -56,6 +56,14 @@ class CategoryController extends Controller
         $updateCategory->save();
         return redirect()->route('dashboard.category.category.view');
     }
-    
+
+    // Cetagory delete
+
+    public function categoryDelete($slug){
+        $deleteCategory = Category::where('slug', $slug)->first();
+        $deleteCategory->delete();
+        return redirect()->back();
+    }
+
 
 }

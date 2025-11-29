@@ -27,7 +27,7 @@
                             <td>{{ $cetagory->description }} </td>
                             <td>
                                 <a href="{{ route('dashboard.category.category.edit', $cetagory->slug) }}" class="btn btn-outline-primary">Edit</a>
-                                <a href="" class="btn btn-outline-danger">Delete</a>
+                                <a href="{{ route('dashboard.category.category.delete', $cetagory->slug) }}" class="btn btn-outline-danger">Delete</a>
                             </td>
                         </tr>
                     @empty

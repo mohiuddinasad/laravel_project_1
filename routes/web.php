@@ -55,6 +55,7 @@ Route::prefix('dashboard/')->name('dashboard.')->middleware(['auth', 'verified']
         Route::get('category-view', [CategoryController::class, 'categoryView'])->name('category.view');
         Route::get('category-edit/{slug}', [CategoryController::class, 'categoryEdit'])->name('category.edit');
         Route::put('category-update/{slug}', [CategoryController::class, 'categoryUpdate'])->name('category.update');
+        Route::get('category-delete/{slug}', [CategoryController::class, 'categoryDelete'])->name('category.delete');
 
     });
 });
