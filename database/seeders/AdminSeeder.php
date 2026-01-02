@@ -18,7 +18,7 @@ class AdminSeeder extends Seeder
             ['email' => 'mohiuddinasad46@gmail.com'],  // admin exists? update. If not, create.
             [
                 'name' => 'Mohiuddin Asad',
-                'password' => Hash::make('62516251'),
+                'password' => Hash::make(value: '62516251'),
             ]
         );
     }

@@ -176,6 +176,21 @@
 
               </ul>
             </li>
+            <li class="menu-item {{ Route::is('dashboard.product.*') ? 'active open':''}}">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <iconify-icon icon="icon-park-outline:ad-product" width="22" height="22"></iconify-icon> &nbsp; &nbsp;
+                <div data-i18n="Layouts">Product</div>
+              </a>
+
+              <ul class="menu-sub">
+                <li class="menu-item {{ Route::is('dashboard.product.index') ? 'active':''}}">
+                  <a href="{{ route('dashboard.product.index') }}" class="menu-link">
+                    <div data-i18n="Without menu">Add Product +</div>
+                  </a>
+                </li>
+
+              </ul>
+            </li>
 
 
           </ul>

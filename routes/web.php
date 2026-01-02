@@ -2,14 +2,16 @@
 
 use App\Http\Controllers\BAckend\Category\CategoryController;
 use App\Http\Controllers\Backend\MyProfile\MyProfileController;
+use App\Http\Controllers\Backend\Product\ProductController;
 use App\Http\Controllers\Backend\RolePermission\RolePermissionController;
+use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');})->middleware(['auth', 'verified'])->name('dashboard');
@@ -58,8 +60,27 @@ Route::prefix('dashboard/')->name('dashboard.')->middleware(['auth', 'verified']
         Route::get('category-delete/{slug}', [CategoryController::class, 'categoryDelete'])->name('category.delete');
 
     });
+
+    Route::prefix('product/')->name('product.')->group(function () {
+        // Product routes will go here
+         Route::get('/', [ProductController::class, 'index'])->name('index');
+         Route::post('store', [ProductController::class, 'store'])->name('store');
+         Route::get('show', [ProductController::class, 'show'])->name('show');
+         Route::get('edit/{slug}', [ProductController::class, 'edit'])->name('edit');
+         Route::put('update/{slug}', [ProductController::class, 'update'])->name('update');
+         Route::get('delete-product/{slug}', [ProductController::class, 'deleteProduct'])->name('delete.product');
+         Route::get('image-delete/{id}', [ProductController::class, 'imageDelete'])->name('image.delete');
+    });
 });
 
 // frontend routes
+Route::name('frontend.')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('add-to-cart/{id}', [HomeController::class, 'addToCart'])->name('add.to.cart');
+    Route::get('remove-cart/{id}', [HomeController::class, 'removeCart'])->name('remove.cart');
+    Route::get('checkout/', [HomeController::class, 'checkout'])->name('checkout');
+    Route::post('order-store/', [HomeController::class, 'orderStore'])->name('order.store');
+});
+
 
 require __DIR__ . '/auth.php';

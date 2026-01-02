@@ -3,7 +3,7 @@
 @section('backend_content')
     <div class="container mt-3">
         <div class="card p-2">
-            <div class="info d-flex align-items-center">
+            <div class="info d-flex align-items-center"> 
                 <div class="image">
                     <img id="blah" width="80px"
                         src="{{ Auth::user()->profile_image ? asset('storage/profileImages/' . Auth::user()->profile_image) : asset('assets/img/avatars/1.png') }}"
