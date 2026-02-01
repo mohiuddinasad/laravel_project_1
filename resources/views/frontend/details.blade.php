@@ -12,6 +12,78 @@
 @endforeach
 
 @extends('frontend.layout')
+@push('frontend_css')
+
+<style>
+    .qty-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 30px;
+        overflow: hidden;
+        width: fit-content;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .qty-control .qty-decrease,
+    .qty-control .qty-increase {
+        background: #fff;
+        border: none;
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease, color 0.3s ease;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .qty-control .qty-decrease:hover,
+    .qty-control .qty-increase:hover {
+        background: #1a936f;
+        color: #fff;
+    }
+
+    .qty-control .qty-decrease:active,
+    .qty-control .qty-increase:active {
+        background: #157a5c;
+        color: #fff;
+    }
+
+    .qty-control .qty-decrease:disabled,
+    .qty-control .qty-increase:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .qty-control .qty-display {
+        width: 42px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        background: #f5f5f5;
+        border-left: 1.5px solid #e0e0e0;
+        border-right: 1.5px solid #e0e0e0;
+        transition: opacity 0.3s ease;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    
+</style>
+@endpush
 @section('frontend_content')
     <!-- ========== Start breadcrumbs_bg ========== -->
     <section id="breadcrumbs_bg" style="background-image: url(./assets/images/details_bg.png);">
@@ -82,7 +154,7 @@
                         </div>
                     </div>
                     <div class="price">
-                        <b class="price">${{ $product->price }}</b>
+                        <b id="price-{{ $product->id }}" class="price">${{ $product->price }}</b>
                         <del>${{ $product->discount_price }}</del>
                         <span>64% Off</span>
                     </div>
@@ -118,13 +190,16 @@
                     <div class="row cart_row align-items-center">
                         <div class="col-lg-3 d-flex justify-content-start px-lg-3">
                             <div class="qty-control" style="position: relative;">
-                                <button type="button" class="qty-decrease decrease" data-id="{{ $product->id }}">-</button>
+                                <button type="button" class="qty-decrease decrease"
+                                    data-id="{{ $product->id }}">-</button>
                                 <div id="qty-{{ $product->id }}" class="qty-display">{{ $data['qty'] ?? 1 }}</div>
                                 <!-- Loading spinner -->
-                                <div id="loading-spinner-{{ $product->id }}" class="" role="status" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;">
+                                <div id="loading-spinner-{{ $product->id }}" class="" role="status"
+                                    style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;">
 
                                 </div>
-                                <button type="button" class="qty-increase increase" data-id="{{ $product->id }}">+</button>
+                                <button type="button" class="qty-increase increase"
+                                    data-id="{{ $product->id }}">+</button>
                             </div>
                         </div>
                         <div class="col-7 px-0 cart">
@@ -435,13 +510,14 @@
 @endsection
 @push('frontend_js')
 
+    @push('frontend_js')
+
     <script>
         $(document).on('click', '.increase', function (e) {
             e.preventDefault();
 
             let productId = $(this).data('id');
 
-            // Show loading spinner and disable buttons
             $('#loading-spinner-' + productId).show();
             $('#qty-' + productId).css('opacity', '0.5');
             $('.increase, .decrease').prop('disabled', true);
@@ -449,26 +525,24 @@
             $.ajax({
                 url: "{{ url('increase') }}/" + productId,
                 type: "POST",
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 data: {
                     _token: "{{ csrf_token() }}"
                 },
                 success: function (response) {
                     if (response.success) {
-                        // Update the quantity display
                         $('#qty-' + productId).text(response.qty);
-                        $('#qty-' + productId).css('opacity', '1');
+                        $('#price-' + productId).text('$' + response.total.toFixed(2));
                     }
-
-                    // Hide loading spinner and re-enable buttons
-                    $('#loading-spinner-' + productId).hide();
-                    $('.increase, .decrease').prop('disabled', false);
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error updating quantity:', error);
+                error: function (xhr, status, error) {
+                    console.error('Status:', xhr.status);
                     console.error('Response:', xhr.responseText);
                     alert('Failed to update quantity. Please try again.');
-
-                    // Hide loading spinner and re-enable buttons
+                },
+                complete: function () {
                     $('#loading-spinner-' + productId).hide();
                     $('#qty-' + productId).css('opacity', '1');
                     $('.increase, .decrease').prop('disabled', false);
@@ -482,12 +556,10 @@
             let productId = $(this).data('id');
             let currentQty = parseInt($('#qty-' + productId).text());
 
-            // Don't allow decrease below 1
             if (currentQty <= 1) {
                 return;
             }
 
-            // Show loading spinner and disable buttons
             $('#loading-spinner-' + productId).show();
             $('#qty-' + productId).css('opacity', '0.5');
             $('.increase, .decrease').prop('disabled', true);
@@ -495,26 +567,24 @@
             $.ajax({
                 url: "{{ url('decrease') }}/" + productId,
                 type: "POST",
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 data: {
                     _token: "{{ csrf_token() }}"
                 },
                 success: function (response) {
                     if (response.success) {
-                        // Update the quantity display
                         $('#qty-' + productId).text(response.qty);
-                        $('#qty-' + productId).css('opacity', '1');
+                        $('#price-' + productId).text('$' + response.total.toFixed(2));
                     }
-
-                    // Hide loading spinner and re-enable buttons
-                    $('#loading-spinner-' + productId).hide();
-                    $('.increase, .decrease').prop('disabled', false);
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error updating quantity:', error);
+                error: function (xhr, status, error) {
+                    console.error('Status:', xhr.status);
                     console.error('Response:', xhr.responseText);
                     alert('Failed to update quantity. Please try again.');
-
-                    // Hide loading spinner and re-enable buttons
+                },
+                complete: function () {
                     $('#loading-spinner-' + productId).hide();
                     $('#qty-' + productId).css('opacity', '1');
                     $('.increase, .decrease').prop('disabled', false);
@@ -522,5 +592,7 @@
             });
         });
     </script>
+
+@endpush
 
 @endpush

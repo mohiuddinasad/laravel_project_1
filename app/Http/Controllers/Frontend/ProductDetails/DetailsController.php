@@ -13,7 +13,10 @@ class DetailsController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        return view('frontend.details', compact('product'));
+        $cart = session('cart', []);
+        $qty = array_sum(array_column($cart, 'qty'));
+
+        return view('frontend.details', compact('product', 'cart', 'qty'));
     }
 
     public function increase($id)
@@ -21,54 +24,58 @@ class DetailsController extends Controller
         $cart = session()->get('cart', []);
 
         if (isset($cart[$id])) {
-            $cart[$id]['qty']++;
-            session()->put('cart', $cart);
+            $cart[$id]['qty']+= 1;
+        } else {
+            $productCart = Product::with('ProductImage')->find($id);
 
-            // Check if it's an AJAX request
-            if (request()->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'qty' => $cart[$id]['qty'],
-                ]);
-            }
-
-            if (isset($cart[$id]['slug'])) {
-                return redirect()->route('frontend.product.details', $cart[$id]['slug']);
-            }
+            $cart[$id] = [
+                'title'          => $productCart->title,
+                'price'          => $productCart->price,
+                'discount_price' => $productCart->discount_price,
+                'qty'            => 1,
+                'image'          => $productCart->ProductImage[0]->image_name ?? null,
+                'descriptions'   => $productCart->descriptions,
+            ];
         }
 
-        if (request()->ajax()) {
-            return response()->json(['success' => false, 'message' => 'Product not found'], 404);
-        }
+        session()->put('cart', $cart);
 
-        return redirect()->back()->with('error', 'Product not found in cart');
+        return response()->json([
+            'success' => true,
+            'qty'     => $cart[$id]['qty'],
+            'total'   => $cart[$id]['price'] * $cart[$id]['qty'],
+        ]);
     }
 
     public function decrease($id)
     {
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$id]) && $cart[$id]['qty'] > 1) {
-            $cart[$id]['qty']--;
-            session()->put('cart', $cart);
+        if (isset($cart[$id])) {
+            if ($cart[$id]['qty'] > 1) {
+                $cart[$id]['qty']-= 1;
+                session()->put('cart', $cart);
 
-            // Check if it's an AJAX request
-            if (request()->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'qty' => $cart[$id]['qty'],
+                    'qty'     => $cart[$id]['qty'],
+                    'total'   => $cart[$id]['price'] * $cart[$id]['qty'],
+                ]);
+            } else {
+                unset($cart[$id]);
+                session()->put('cart', $cart);
+
+                return response()->json([
+                    'success' => true,
+                    'qty'     => 0,
+                    'total'   => 0,
                 ]);
             }
-
-            if (isset($cart[$id]['slug'])) {
-                return redirect()->route('frontend.product.details', $cart[$id]['slug']);
-            }
         }
 
-        if (request()->ajax()) {
-            return response()->json(['success' => false, 'message' => 'Cannot decrease quantity'], 400);
-        }
-
-        return redirect()->back()->with('error', 'Product not found in cart');
+        return response()->json([
+            'success' => false,
+            'message' => 'Product not in cart',
+        ]);
     }
 }

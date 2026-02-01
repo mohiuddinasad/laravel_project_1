@@ -471,10 +471,7 @@
     <div id="toast" class="toast-message"></div>
 
 
-    @php
-        $cart = session('cart', []);
-        $qty = array_sum(array_column($cart, 'qty'));
-    @endphp
+
 
     <!-- ========== Start cart_sidebar ========== -->
     <aside class="cart-sidebar" id="cartSidebar">

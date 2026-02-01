@@ -96,7 +96,7 @@ $totalAmount += $data['price'] * $data['qty']
                                         alt="">
                                 </div>
                                 <div class="col-8">
-                                    <p class="mb-0 pb-0">{{ $data['descriptions'] }}</p>
+                                    <p class="mb-0 pb-0">{{ $data['title'] }}</p>
                                     <span>Price : {{ $data['price'] }}</span>
                                     <span>Qty : {{ $data['qty'] }}</span>
                                 </div>

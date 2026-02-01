@@ -35,17 +35,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-2">
-                            <label class="form-label small text-muted">Date From</label>
-                            <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}"
-                                onchange="this.form.submit()">
-                        </div>
 
-                        <div class="col-md-2">
-                            <label class="form-label small text-muted">Date To</label>
-                            <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}"
-                                onchange="this.form.submit()">
-                        </div>
 
 
                     </div>
@@ -145,7 +135,9 @@
                                         <div class="d-flex align-items-center">
                                             <div class="avatar-circle me-2">{{ strtoupper(substr($order->name, 0, 1)) }}</div>
                                             <div>
-                                                <div class="fw-medium">{{ $order->name }}</div>
+                                                <a href="{{ route('dashboard.order.show', $order->id) }}">
+                                                    <div class="fw-medium">{{ $order->name }}</div>
+                                                </a>
                                                 <small class="text-muted">{{ $order->email }}</small>
                                             </div>
                                         </div>
@@ -159,20 +151,12 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2 justify-content-center">
-                                            <a href="{{ route('dashboard.order.show', $order->id) }}" class="btn btn-sm lh-1 btn-outline-primary" title="View">
-                                                <iconify-icon icon="lsicon:view-outline" width="24" height="24"></iconify-icon>
-                                            </a>
-                                            <a href="{{ route('dashboard.order.destroy', $order->id) }}"
-                                                class="btn btn-sm lh-1 btn-outline-danger" title="Delete">
-                                                <iconify-icon icon="material-symbols-light:delete" width="24"
-                                                    height="24"></iconify-icon>
-                                            </a>
+
 
                                             <div class="dropdown">
-                                                <button class="btn btn-sm lh-1 btn-outline-info" type="button"
+                                                <button class="btn" type="button"
                                                     title="Change Status" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <iconify-icon icon="cuida:edit-outline" width="24"
-                                                        height="24"></iconify-icon>
+                                                    <iconify-icon icon="qlementine-icons:menu-dots-16" width="24" height="24"></iconify-icon>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item"
@@ -186,6 +170,9 @@
                                                     </li>
                                                     <li><a class="dropdown-item"
                                                             href="{{ route('dashboard.order.updateStatus', ['id' => $order->id, 'status' => 'cancelled']) }}">Cancelled</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item"
+                                                            href="{{ route('dashboard.order.destroy', $order->id) }}">Delete</a>
                                                     </li>
                                                 </ul>
                                             </div>

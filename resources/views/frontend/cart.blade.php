@@ -2,7 +2,7 @@
     $cart = session('cart', []);
     $qty = array_sum(array_column($cart, 'qty'));
  @endphp
-@php 
+@php
     $totalAmount = 0;
  @endphp
 @foreach ($cart as $id => $data)
