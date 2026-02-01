@@ -2,18 +2,26 @@
 
 namespace App\Models\Category;
 
-
 use App\Models\Product\Product;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    public function parent (){
-        return $this->belongsTo(Category::class, 'category_id');
+    protected $fillable = ['title', 'slug', 'category_id'];
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'category_id'); 
     }
 
-    public function products(){
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'category_id')
+            ->with('children');
+    }
+
+    public function products()
+    {
         return $this->hasMany(Product::class);
     }
 }

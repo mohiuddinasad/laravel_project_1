@@ -1,7 +1,7 @@
 @extends('backend.layout')
 @section('backend_content')
     <div class="container">
-        <div class="card mt-3">
+        <div class="card mt-3"> 
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">Product list</h4>
                 <a href="{{ route('dashboard.product.index') }}" class="btn btn-primary"><iconify-icon

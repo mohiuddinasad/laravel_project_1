@@ -139,12 +139,10 @@
 
             <div class="row product_boxes">
                 @forelse ($products as $product)
-                    <div class="product filter_body col-lg-3 p-0" data-stock="true" data-id="{{ $product->title . $product->id }}"
-                        data-name="{{ $product->title }}" data-price="{{ $product->price }}"
-                        data-img="{{ asset('storage/product_images/' . $product->ProductImage->first()->image_name) }}">
+                    <div class="product filter_body col-lg-3 p-0">
                         <div class="filter fruit">
                             <span class="sale">Sale 50%</span>
-                            <a href="details.html">
+                            <a href="{{ route('frontend.product.details', $product->slug) }}">
                                 <img class="img-fluid" src="{{ asset('storage/product_images/' . $product->ProductImage->first()->image_name) }}" alt="">
                             </a>
                             <div class="details">
@@ -194,7 +192,7 @@
                 @empty
 
                 @endforelse
-
+ 
             </div>
 
         </div>

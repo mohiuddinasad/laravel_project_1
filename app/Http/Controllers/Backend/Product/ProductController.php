@@ -13,11 +13,16 @@ use SweetAlert2\Laravel\Swal;
 
 class ProductController extends Controller
 {
+
+
+
     public function index()
     {
         $categories = Category::all();
         return view('backend.product.index', compact('categories'));
     }
+
+    
 
     public function store(Request $request)
     {
@@ -63,7 +68,7 @@ class ProductController extends Controller
 
             DB::commit();
             return back();
-        } catch (\Exception $e) {
+        } catch (\Exception $e) { 
             DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }

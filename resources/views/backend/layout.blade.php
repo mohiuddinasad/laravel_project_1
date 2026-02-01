@@ -144,6 +144,12 @@
                 <div data-i18n="Analytics">Categories</div>
               </a>
             </li>
+            <li class="menu-item {{ Route::is('dashboard.order.index') ? 'active open':''}}" >
+              <a href="{{ route('dashboard.order.index') }}" class="menu-link">
+                <iconify-icon icon="lets-icons:order" width="24" height="24"></iconify-icon> &nbsp; &nbsp;
+                <div data-i18n="Analytics">Orders</div>
+              </a>
+            </li>
 
             <!-- Layouts -->
             <li class="menu-item {{ Route::is('dashboard.rolePermission.*') ? 'active open':''}}">
